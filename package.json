@@ -2,13 +2,29 @@
   "name": "time-warp-scheduler",
   "version": "1.0.0",
   "description": "A non-linear task scheduler with time distortion, rewind, and event-driven capabilities",
-  "main": "timeWarpScheduler.js",
+  "homepage": "https://github.com/Le-Sourcier/time-warp-scheduler#readme",
+  "bugs": {
+    "url": "https://github.com/Le-Sourcier/time-warp-scheduler/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Le-Sourcier/time-warp-scheduler.git"
+  },
+  "license": "MIT",
+  "keywords": [
+    "scheduler",
+    "time",
+    "non-linear",
+    "task",
+    "javascript",
+    "event-driven"
+  ],
+  "author": "Le-Sourcier",
+  "type": "commonjs",
+  "main": "time-warp-scheduler.js",
   "scripts": {
     "test": "jest"
   },
-  "keywords": ["scheduler", "time", "non-linear", "task", "javascript", "event-driven"],
-  "author": "Le-Sourcier",
-  "license": "MIT",
   "dependencies": {
     "events": "^3.3.0"
   },

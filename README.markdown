@@ -1,4 +1,3 @@
-````markdown
 # ⏳ TimeWarpScheduler
 
 A JavaScript library for scheduling tasks with **non-linear time intervals**, **time distortion**, and **rewind capabilities**. Ideal for simulations, animations, games, IoT, or interactive apps.
@@ -28,7 +27,6 @@ Or, use it locally:
 
 ```js
 const { TimeWarpScheduler } = require('./time-warp-scheduler');
-```
 
 ---
 
@@ -106,14 +104,14 @@ const scheduler = new TimeWarpScheduler();
 
 Schedules a task with specific interval behavior.
 
-* `task`: `Function` (sync or async)
-* `options`:
+- `task`: `Function` (sync or async)
+- `options`:
 
-  * `curve`: `'linear' | 'sinusoidal' | 'exponential' | 'logarithmic' | 'custom'`
-  * `duration`: number (ms, default: `60000`)
-  * `amplitude`: number (ms, default: `1000`)
-  * `scale`: number (default: `1`)
-  * `customCurve`: `(elapsed, duration, amplitude, scale) => number`
+  - `curve`: `'linear' | 'sinusoidal' | 'exponential' | 'logarithmic' | 'custom'`
+  - `duration`: number (ms, default: `60000`)
+  - `amplitude`: number (ms, default: `1000`)
+  - `scale`: number (default: `1`)
+  - `customCurve`: `(elapsed, duration, amplitude, scale) => number`
 
 ✅ Returns: `taskId: number`
 
@@ -153,14 +151,14 @@ Export or import execution history.
 
 ### Events
 
-* `taskAdded`: `{ taskId, options }`
-* `taskExecuted`: `{ taskId, time }`
-* `distortionChanged`: `{ factor }`
-* `taskRewound`: `{ taskId, executionIndex }`
-* `taskCancelled`: `{ taskId }`
-* `paused` / `resumed` / `stopped`
-* `error`: `{ taskId, error }`
-* `historyImported`: `{ history }`
+- `taskAdded`: `{ taskId, options }`
+- `taskExecuted`: `{ taskId, time }`
+- `distortionChanged`: `{ factor }`
+- `taskRewound`: `{ taskId, executionIndex }`
+- `taskCancelled`: `{ taskId }`
+- `paused` / `resumed` / `stopped`
+- `error`: `{ taskId, error }`
+- `historyImported`: `{ history }`
 
 ---
 
@@ -182,9 +180,9 @@ Commands: stress, rest, rewind, pause, resume, cancel, stop
 
 🎮 Try commands like:
 
-* `stress` → Speeds up
-* `rest` → Slows down
-* `rewind` → Replay old beats
+- `stress` → Speeds up
+- `rest` → Slows down
+- `rewind` → Replay old beats
 
 Logs are saved to `heartbeats.log`.
 
@@ -192,10 +190,10 @@ Logs are saved to `heartbeats.log`.
 
 ## 🧠 Use Cases
 
-* **Games**: Animate NPCs, lights, or sounds irregularly.
-* **IoT**: Simulate sensor behavior and transmission latency.
-* **Medical**: Model heartbeats or respiratory patterns.
-* **UI/UX**: Show alerts or tips based on dynamic pacing.
+- **Games**: Animate NPCs, lights, or sounds irregularly.
+- **IoT**: Simulate sensor behavior and transmission latency.
+- **Medical**: Model heartbeats or respiratory patterns.
+- **UI/UX**: Show alerts or tips based on dynamic pacing.
 
 ---
 
