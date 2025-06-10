@@ -1,6 +1,14 @@
 // Import EventEmitter for event-driven architecture
 const EventEmitter = require("events");
 
+const SUPPORTED_CURVES = [
+  "linear",
+  "sinusoidal",
+  "exponential",
+  "logarithmic",
+  "custom",
+];
+
 class TimeWarpScheduler extends EventEmitter {
   // Initialize scheduler properties
   constructor() {
@@ -21,6 +29,7 @@ class TimeWarpScheduler extends EventEmitter {
       amplitude = 1000,
       scale = 1,
     } = options;
+    console.debug(`Validating curve: ${curve}`); // Debug log
     if (
       ![
         "linear",
@@ -48,6 +57,11 @@ class TimeWarpScheduler extends EventEmitter {
 
   // Schedule a task with a temporal curve
   async warpTask(task, options = {}) {
+    if (!SUPPORTED_CURVES.includes(options.curve)) {
+      throw new Error(
+        `Unsupported curve type: ${options.curve}. Use linear, sinusoidal, exponential, logarithmic, or custom.`
+      );
+    }
     if (typeof task !== "function") {
       throw new Error("Task must be a function");
     }
@@ -168,6 +182,12 @@ class TimeWarpScheduler extends EventEmitter {
     this.emit("taskCancelled", { taskId });
   }
 
+  // Get task status by ID
+  getTaskStatus(taskId) {
+    const task = this.tasks.find((t) => t.id === taskId);
+    return task ? task.status : null;
+  }
+
   // Pause the scheduler
   pause() {
     if (!this.isPaused) {
@@ -207,6 +227,13 @@ class TimeWarpScheduler extends EventEmitter {
     const loop = async () => {
       if (!this.isRunning || !this.tasks.length || this.isPaused) {
         this.isRunning = false;
+        return;
+      }
+
+      // Skip loop if all tasks are cancelled
+      if (this.tasks.every((task) => task.status === "cancelled")) {
+        this.isRunning = false;
+        this.emit("stopped");
         return;
       }
 

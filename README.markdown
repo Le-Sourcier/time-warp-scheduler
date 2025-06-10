@@ -1,19 +1,20 @@
 # ⏳ TimeWarpScheduler
 
-A JavaScript library for scheduling tasks with **non-linear time intervals**, **time distortion**, and **rewind capabilities**. Ideal for simulations, animations, games, IoT, or interactive apps.
+A JavaScript library for scheduling tasks with non-linear time intervals, time distortion, and rewind capabilities. Ideal for simulations, animations, games, IoT, or interactive apps.
 
 ---
 
 ## 📚 Table of Contents
 
-- [Installation](#installation)
-- [Features](#features)
-- [Usage](#usage)
-- [API Reference](#api-reference)
-- [Example: Heartbeat Simulation](#example-heartbeat-simulation)
-- [Use Cases](#use-cases)
-- [Contributing](#contributing)
-- [License](#license)
+- [Installation](#-installation)  
+- [Features](#-features)  
+- [Usage](#-usage)  
+- [API Reference](#-api-reference)  
+- [Testing](#-testing)  
+- [Example: Heartbeat Simulation](#️-example-heartbeat-simulation)  
+- [Use Cases](#-use-cases)  
+- [Contributing](#-contributing)  
+- [License](#-license)
 
 ---
 
@@ -27,19 +28,21 @@ Or, use it locally:
 
 ```js
 const { TimeWarpScheduler } = require('./time-warp-scheduler');
+```
 
 ---
 
 ## ✨ Features
 
-* 🌀 **Non-linear Intervals**: `linear`, `sinusoidal`, `exponential`, `logarithmic`, or `custom` curves.
-* 🕰️ **Time Distortion**: Dynamically speed up or slow down task execution.
-* 🔁 **Task Rewind**: Replay specific past executions.
-* 🔄 **Async Support**: Fully compatible with `async`/`await`.
-* ⏸️ **Pause/Resume**: Temporarily halt or resume task scheduling.
-* ❌ **Task Cancellation**: Cancel individual tasks via ID.
-* 📡 **Event-Driven**: Listen to key lifecycle events (execution, errors, state).
-* 🧾 **History Management**: Export/import task execution logs.
+- 🌀 **Non-linear Intervals**: linear, sinusoidal, exponential, logarithmic, or custom curves.
+- 🕰️ **Time Distortion**: Dynamically speed up or slow down task execution.
+- 🔁 **Task Rewind**: Replay specific past executions.
+- 🔄 **Async Support**: Fully compatible with async/await.
+- ⸮ **Pause/Resume**: Temporarily halt or resume task scheduling.
+- ❌ **Task Cancellation**: Cancel individual tasks via ID.
+- 📡 **Event-Driven**: Listen to key lifecycle events (execution, errors, state).
+- 🧾 **History Management**: Export/import task execution logs.
+- 🔍 **Task Status**: Retrieve task status (pending, running, cancelled).
 
 ---
 
@@ -98,19 +101,21 @@ scheduler.on('error', ({ taskId, error }) => {
 const scheduler = new TimeWarpScheduler();
 ```
 
+---
+
 ### Methods
 
 #### `warpTask(task, options)`
 
 Schedules a task with specific interval behavior.
 
-- `task`: `Function` (sync or async)
+- `task`: Function (sync or async)
 - `options`:
 
   - `curve`: `'linear' | 'sinusoidal' | 'exponential' | 'logarithmic' | 'custom'`
-  - `duration`: number (ms, default: `60000`)
-  - `amplitude`: number (ms, default: `1000`)
-  - `scale`: number (default: `1`)
+  - `duration`: number (ms, default: 60000)
+  - `amplitude`: number (ms, default: 1000)
+  - `scale`: number (default: 1)
   - `customCurve`: `(elapsed, duration, amplitude, scale) => number`
 
 ✅ Returns: `taskId: number`
@@ -134,6 +139,10 @@ Replay a past execution.
 #### `cancelTask(taskId)`
 
 Cancel task by ID.
+
+#### `getTaskStatus(taskId)`
+
+Get task status (`pending`, `running`, `cancelled`, or `null`).
 
 #### `pause()` / `resume()`
 
@@ -162,6 +171,64 @@ Export or import execution history.
 
 ---
 
+## 🧪 Testing
+
+The project includes a Jest test suite to verify functionality.
+
+### Setup
+
+Install Jest:
+
+```bash
+npm install --save-dev jest
+```
+
+Update `package.json`:
+
+```json
+{
+  "scripts": {
+    "test": "jest"
+  }
+}
+```
+
+Add `jest.config.js`:
+
+```js
+module.exports = {
+  testEnvironment: 'node',
+  clearMocks: true,
+  resetModules: true,
+};
+```
+
+### Run Tests
+
+```bash
+npm test
+```
+
+### The test suite covers
+
+- Adding and executing tasks (sync and async).
+- Handling invalid curve types.
+- Applying time distortion.
+- Pausing and resuming the scheduler.
+- Cancelling tasks.
+- Exporting and importing history.
+
+### Troubleshooting Tests
+
+If tests fail:
+
+- **Module not found**: Ensure `require('./time-warp-scheduler')` points to `time-warp-scheduler.js`.
+- **Error mismatches**: Verify error messages match those in `time-warp-scheduler.js`.
+- **Async issues**: Increase `setTimeout` durations in async tests (e.g., from 200ms to 300ms).
+- **Module caching**: Run `npm cache clean --force` and `rm -rf node_modules`, then `npm install`.
+
+---
+
 ## ❤️ Example: Heartbeat Simulation
 
 The included `heartbeat.js` mimics a dynamic human pulse (60–120 BPM).
@@ -170,9 +237,9 @@ The included `heartbeat.js` mimics a dynamic human pulse (60–120 BPM).
 npm start
 ```
 
-**Terminal output:**
+Terminal output:
 
-```
+```text
 Heartbeat Simulation Started!
 Commands: stress, rest, rewind, pause, resume, cancel, stop
 ❤️ Heartbeat at 2025-06-10T00:24:01.123Z (BPM: 80)
@@ -201,11 +268,11 @@ Logs are saved to `heartbeats.log`.
 
 Contributions are welcome!
 
-1. Fork the repo
-2. `git checkout -b feature/new-feature`
-3. Commit: `git commit -m 'Add new feature'`
-4. Push: `git push origin feature/new-feature`
-5. Open a Pull Request 🚀
+- Fork the repo
+- `git checkout -b feature/new-feature`
+- Commit: `git commit -m 'Add new feature'`
+- Push: `git push origin feature/new-feature`
+- Open a Pull Request 🚀
 
 ---
 

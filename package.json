@@ -23,7 +23,8 @@
   "type": "commonjs",
   "main": "time-warp-scheduler.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "start": "node heartbeat.js"
   },
   "dependencies": {
     "events": "^3.3.0"
