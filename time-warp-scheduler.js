@@ -1,207 +1,26 @@
-// const EventEmitter = require("events");
-
-// class TimeWarpScheduler extends EventEmitter {
-//   constructor() {
-//     super();
-//     this.tasks = [];
-//     this.isRunning = false;
-//     this.distortionFactor = 1;
-//     this.history = [];
-//     this.minInterval = 50; // Intervalle minimum pour éviter la surcharge CPU
-//   }
-
-//   // Valide les options d'une tâche
-//   validateOptions(options) {
-//     const { curve = "linear", duration = 60000, amplitude = 1000 } = options;
-//     if (
-//       ![
-//         "linear",
-//         "sinusoidal",
-//         "exponential",
-//         "logarithmic",
-//         "custom",
-//       ].includes(curve)
-//     ) {
-//       throw new Error(`Courbe non supportée : ${curve}`);
-//     }
-//     if (typeof duration !== "number" || duration <= 0) {
-//       throw new Error("La durée doit être un nombre positif");
-//     }
-//     if (typeof amplitude !== "number" || amplitude <= 0) {
-//       throw new Error("L'amplitude doit être un nombre positif");
-//     }
-//     return { curve, duration, amplitude };
-//   }
-
-//   // Planifie une tâche avec une courbe temporelle
-//   warpTask(task, options = {}) {
-//     if (typeof task !== "function") {
-//       throw new Error("La tâche doit être une fonction");
-//     }
-
-//     const { curve, duration, amplitude } = this.validateOptions(options);
-//     const taskId = this.tasks.length;
-//     const startTime = Date.now();
-
-//     const taskObj = {
-//       id: taskId,
-//       task,
-//       curve,
-//       duration,
-//       amplitude,
-//       lastExecution: startTime,
-//       customCurve: options.customCurve || null, // Pour courbes personnalisées
-//     };
-
-//     this.tasks.push(taskObj);
-//     this.history.push({ id: taskId, executions: [] });
-//     this.emit("taskAdded", { taskId, options });
-
-//     if (!this.isRunning) {
-//       this.isRunning = true;
-//       this.run();
-//     }
-
-//     return taskId;
-//   }
-
-//   // Calcule l'intervalle en fonction de la courbe
-//   getNextInterval(task, currentTime) {
-//     const elapsed = currentTime - task.lastExecution;
-//     let interval;
-
-//     switch (task.curve) {
-//       case "sinusoidal":
-//         interval =
-//           task.amplitude *
-//           Math.abs(Math.sin((elapsed / task.duration) * Math.PI));
-//         break;
-//       case "exponential":
-//         interval = task.amplitude * Math.exp(-elapsed / task.duration);
-//         break;
-//       case "logarithmic":
-//         interval = task.amplitude * Math.log1p(elapsed / task.duration);
-//         break;
-//       case "custom":
-//         if (typeof task.customCurve !== "function") {
-//           throw new Error(
-//             "Une fonction customCurve est requise pour la courbe personnalisée"
-//           );
-//         }
-//         interval = task.customCurve(elapsed, task.duration, task.amplitude);
-//         break;
-//       default:
-//         interval = task.amplitude; // Linear
-//     }
-
-//     return Math.max(this.minInterval, interval * this.distortionFactor);
-//   }
-
-//   // Applique une distorsion temporelle
-//   distort(factorCallback) {
-//     if (typeof factorCallback !== "function") {
-//       throw new Error("factorCallback doit être une fonction");
-//     }
-//     const newFactor = factorCallback();
-//     if (typeof newFactor !== "number" || newFactor <= 0) {
-//       throw new Error("Le facteur de distorsion doit être un nombre positif");
-//     }
-//     this.distortionFactor = newFactor;
-//     this.emit("distortionChanged", { factor: newFactor });
-//   }
-
-//   // Rebobine pour rejouer une tâche
-//   rewind(taskId, executionIndex = 0) {
-//     const taskHistory = this.history.find((h) => h.id === taskId);
-//     if (!taskHistory) {
-//       throw new Error(`Aucune tâche trouvée avec l'ID ${taskId}`);
-//     }
-//     if (!taskHistory.executions[executionIndex]) {
-//       throw new Error(`Aucune exécution trouvée à l'index ${executionIndex}`);
-//     }
-//     const task = this.tasks.find((t) => t.id === taskId);
-//     if (task) {
-//       try {
-//         task.task();
-//         taskHistory.executions.push({ time: Date.now() });
-//         this.emit("taskRewound", { taskId, executionIndex });
-//       } catch (error) {
-//         this.emit("error", { taskId, error });
-//       }
-//     }
-//   }
-
-//   // Exporte l'historique
-//   exportHistory() {
-//     return JSON.stringify(this.history);
-//   }
-
-//   // Importe l'historique
-//   importHistory(historyJson) {
-//     try {
-//       this.history = JSON.parse(historyJson);
-//       this.emit("historyImported", { history: this.history });
-//     } catch (error) {
-//       throw new Error(
-//         "Échec de l'importation de l'historique : " + error.message
-//       );
-//     }
-//   }
-
-//   // Boucle principale pour exécuter les tâches
-//   run() {
-//     const loop = () => {
-//       if (!this.isRunning || !this.tasks.length) {
-//         this.isRunning = false;
-//         return;
-//       }
-
-//       const currentTime = Date.now();
-//       this.tasks.forEach((task) => {
-//         try {
-//           const interval = this.getNextInterval(task, currentTime);
-//           if (currentTime - task.lastExecution >= interval) {
-//             task.task();
-//             task.lastExecution = currentTime;
-//             this.history
-//               .find((h) => h.id === task.id)
-//               .executions.push({ time: currentTime });
-//             this.emit("taskExecuted", { taskId: task.id, time: currentTime });
-//           }
-//         } catch (error) {
-//           this.emit("error", { taskId: task.id, error });
-//         }
-//       });
-
-//       setTimeout(loop, this.minInterval);
-//     };
-
-//     loop();
-//   }
-
-//   // Arrête le planificateur
-//   stop() {
-//     this.isRunning = false;
-//     this.emit("stopped");
-//   }
-// }
-
-// module.exports = { TimeWarpScheduler };
-
+// Import EventEmitter for event-driven architecture
 const EventEmitter = require("events");
 
 class TimeWarpScheduler extends EventEmitter {
+  // Initialize scheduler properties
   constructor() {
     super();
-    this.tasks = [];
-    this.isRunning = false;
-    this.distortionFactor = 1;
-    this.history = [];
-    this.minInterval = 100; // Augmenté à 100ms pour éviter la surcharge
+    this.tasks = []; // Array to store scheduled tasks
+    this.isRunning = false; // Flag to control scheduler loop
+    this.isPaused = false; // Flag to track pause state
+    this.distortionFactor = 1; // Time distortion multiplier
+    this.history = []; // Store task execution history
+    this.minInterval = 100; // Minimum interval (ms) to prevent CPU overload
   }
 
+  // Validate task options
   validateOptions(options) {
-    const { curve = "linear", duration = 60000, amplitude = 1000 } = options;
+    const {
+      curve = "linear",
+      duration = 60000,
+      amplitude = 1000,
+      scale = 1,
+    } = options;
     if (
       ![
         "linear",
@@ -211,23 +30,29 @@ class TimeWarpScheduler extends EventEmitter {
         "custom",
       ].includes(curve)
     ) {
-      throw new Error(`Courbe non supportée : ${curve}`);
+      throw new Error(
+        `Unsupported curve type: ${curve}. Use linear, sinusoidal, exponential, logarithmic, or custom.`
+      );
     }
     if (typeof duration !== "number" || duration <= 0) {
-      throw new Error("La durée doit être un nombre positif");
+      throw new Error("Duration must be a positive number");
     }
     if (typeof amplitude !== "number" || amplitude <= 0) {
-      throw new Error("L'amplitude doit être un nombre positif");
+      throw new Error("Amplitude must be a positive number");
     }
-    return { curve, duration, amplitude };
+    if (typeof scale !== "number" || scale <= 0) {
+      throw new Error("Scale must be a positive number");
+    }
+    return { curve, duration, amplitude, scale };
   }
 
-  warpTask(task, options = {}) {
+  // Schedule a task with a temporal curve
+  async warpTask(task, options = {}) {
     if (typeof task !== "function") {
-      throw new Error("La tâche doit être une fonction");
+      throw new Error("Task must be a function");
     }
 
-    const { curve, duration, amplitude } = this.validateOptions(options);
+    const { curve, duration, amplitude, scale } = this.validateOptions(options);
     const taskId = this.tasks.length;
     const startTime = Date.now();
 
@@ -237,15 +62,17 @@ class TimeWarpScheduler extends EventEmitter {
       curve,
       duration,
       amplitude,
+      scale,
       lastExecution: startTime,
       customCurve: options.customCurve || null,
+      status: "pending", // Track task status: pending, running, cancelled
     };
 
     this.tasks.push(taskObj);
     this.history.push({ id: taskId, executions: [] });
     this.emit("taskAdded", { taskId, options });
 
-    if (!this.isRunning) {
+    if (!this.isRunning && !this.isPaused) {
       this.isRunning = true;
       this.run();
     }
@@ -253,98 +80,145 @@ class TimeWarpScheduler extends EventEmitter {
     return taskId;
   }
 
+  // Calculate the next interval based on the curve
   getNextInterval(task, currentTime) {
     const elapsed = currentTime - task.lastExecution;
     let interval;
 
     switch (task.curve) {
       case "sinusoidal":
-        // Ajout d'une base pour éviter des intervalles trop courts
+        // Add base to prevent near-zero intervals, scaled for flexibility
         interval =
           task.amplitude *
-          (0.5 + 0.5 * Math.abs(Math.sin((elapsed / task.duration) * Math.PI)));
+          (0.5 +
+            0.5 * Math.abs(Math.sin((elapsed / task.duration) * Math.PI))) *
+          task.scale;
         break;
       case "exponential":
-        interval = task.amplitude * Math.exp(-elapsed / task.duration);
+        interval =
+          task.amplitude * Math.exp(-elapsed / task.duration) * task.scale;
         break;
       case "logarithmic":
-        interval = task.amplitude * Math.log1p(elapsed / task.duration);
+        interval =
+          task.amplitude * Math.log1p(elapsed / task.duration) * task.scale;
         break;
       case "custom":
         if (typeof task.customCurve !== "function") {
           throw new Error(
-            "Une fonction customCurve est requise pour la courbe personnalisée"
+            "A customCurve function is required for custom curve"
           );
         }
-        interval = task.customCurve(elapsed, task.duration, task.amplitude);
+        interval = task.customCurve(
+          elapsed,
+          task.duration,
+          task.amplitude,
+          task.scale
+        );
         break;
       default:
-        interval = task.amplitude;
+        interval = task.amplitude * task.scale;
     }
 
     return Math.max(this.minInterval, interval * this.distortionFactor);
   }
 
+  // Apply time distortion
   distort(factorCallback) {
     if (typeof factorCallback !== "function") {
-      throw new Error("factorCallback doit être une fonction");
+      throw new Error("factorCallback must be a function");
     }
     const newFactor = factorCallback();
     if (typeof newFactor !== "number" || newFactor <= 0) {
-      throw new Error("Le facteur de distorsion doit être un nombre positif");
+      throw new Error("Distortion factor must be a positive number");
     }
     this.distortionFactor = newFactor;
     this.emit("distortionChanged", { factor: newFactor });
   }
 
-  rewind(taskId, executionIndex = 0) {
+  // Rewind to replay a task execution
+  async rewind(taskId, executionIndex = 0) {
     const taskHistory = this.history.find((h) => h.id === taskId);
     if (!taskHistory) {
-      throw new Error(`Aucune tâche trouvée avec l'ID ${taskId}`);
+      throw new Error(`No task found with ID ${taskId}`);
     }
     if (!taskHistory.executions[executionIndex]) {
-      throw new Error(`Aucune exécution trouvée à l'index ${executionIndex}`);
+      throw new Error(
+        `No execution found at index ${executionIndex} for task ${taskId}`
+      );
     }
     const task = this.tasks.find((t) => t.id === taskId);
-    if (task) {
+    if (task && task.status !== "cancelled") {
       try {
-        task.task();
+        await task.task(); // Support async tasks
         taskHistory.executions.push({ time: Date.now() });
         this.emit("taskRewound", { taskId, executionIndex });
       } catch (error) {
-        this.emit("error", { taskId, error });
+        this.emit("error", { taskId, error: error.message });
       }
     }
   }
 
-  exportHistory() {
-    return JSON.stringify(this.history);
+  // Cancel a specific task
+  cancelTask(taskId) {
+    const task = this.tasks.find((t) => t.id === taskId);
+    if (!task) {
+      throw new Error(`No task found with ID ${taskId}`);
+    }
+    task.status = "cancelled";
+    this.emit("taskCancelled", { taskId });
   }
 
+  // Pause the scheduler
+  pause() {
+    if (!this.isPaused) {
+      this.isPaused = true;
+      this.isRunning = false;
+      this.emit("paused");
+    }
+  }
+
+  // Resume the scheduler
+  resume() {
+    if (this.isPaused) {
+      this.isPaused = false;
+      this.isRunning = true;
+      this.run();
+      this.emit("resumed");
+    }
+  }
+
+  // Export execution history
+  exportHistory() {
+    return JSON.stringify(this.history, null, 2);
+  }
+
+  // Import execution history
   importHistory(historyJson) {
     try {
       this.history = JSON.parse(historyJson);
       this.emit("historyImported", { history: this.history });
     } catch (error) {
-      throw new Error(
-        "Échec de l'importation de l'historique : " + error.message
-      );
+      throw new Error(`Failed to import history: ${error.message}`);
     }
   }
 
-  run() {
-    const loop = () => {
-      if (!this.isRunning || !this.tasks.length) {
+  // Main loop to execute tasks
+  async run() {
+    const loop = async () => {
+      if (!this.isRunning || !this.tasks.length || this.isPaused) {
         this.isRunning = false;
         return;
       }
 
       const currentTime = Date.now();
-      this.tasks.forEach((task) => {
+      for (const task of this.tasks) {
+        if (task.status === "cancelled") continue;
         try {
           const interval = this.getNextInterval(task, currentTime);
           if (currentTime - task.lastExecution >= interval) {
-            task.task();
+            task.status = "running";
+            await task.task(); // Support async tasks
+            task.status = "pending";
             task.lastExecution = currentTime;
             this.history
               .find((h) => h.id === task.id)
@@ -352,9 +226,9 @@ class TimeWarpScheduler extends EventEmitter {
             this.emit("taskExecuted", { taskId: task.id, time: currentTime });
           }
         } catch (error) {
-          this.emit("error", { taskId: task.id, error });
+          this.emit("error", { taskId: task.id, error: error.message });
         }
-      });
+      }
 
       setTimeout(loop, this.minInterval);
     };
@@ -362,8 +236,10 @@ class TimeWarpScheduler extends EventEmitter {
     loop();
   }
 
+  // Stop the scheduler
   stop() {
     this.isRunning = false;
+    this.isPaused = false;
     this.emit("stopped");
   }
 }
