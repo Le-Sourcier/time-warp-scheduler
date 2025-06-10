@@ -1,0 +1,18 @@
+{
+  "name": "time-warp-scheduler",
+  "version": "1.0.0",
+  "description": "A non-linear task scheduler with time distortion, rewind, and event-driven capabilities",
+  "main": "timeWarpScheduler.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": ["scheduler", "time", "non-linear", "task", "javascript", "event-driven"],
+  "author": "Le-Sourcier",
+  "license": "MIT",
+  "dependencies": {
+    "events": "^3.3.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}
